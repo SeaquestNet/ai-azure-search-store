@@ -66,7 +66,7 @@ final class SearchStore implements StoreInterface
         $this->request('index', $payload);*/
 
         $metadata = $document->getMetadata()->getArrayCopy();
-        $metadata = array_map(fn ($key, $value) => [str_replace('_', '', (string) $key)] = $value, array_keys($metadata), array_values($metadata));
+        $metadata = array_combine(str_replace('_', '', array_keys($metadata)), $metadata);
 
         $this->request('index', [
             'value' => array_map(fn (VectorDocument $document): array => array_merge([
