@@ -48,12 +48,16 @@ final class SearchStore implements StoreInterface
             $documents = [$documents];
         }
 
-        $this->request('index', [
-            'value' => array_map(fn (VectorDocument $document): array => array_merge([
+        $payload = [
+            'value' => array_map(fn(VectorDocument $document): array => array_merge([
                 'id' => $document->getId(),
                 $this->vectorFieldName => $document->getVector()->getData(),
             ], $document->getMetadata()->getArrayCopy()), $documents),
-        ]);
+        ];
+
+        dump($payload);
+
+        $this->request('index', $payload);
     }
 
     public function remove(string|array $ids, array $options = []): void
