@@ -49,13 +49,18 @@ final class SearchStore implements StoreInterface
         }
 
         $payload = [
-            'value' => array_map(fn(VectorDocument $document): array => array_merge([
-                'id' => $document->getId(),
-                $this->vectorFieldName => $document->getVector()->getData(),
-            ], $document->getMetadata()->getArrayCopy()), $documents),
-        ];
+            'value' => array_map(function (VectorDocument $document): array {
+                $metadata = [];
+                foreach ($document->getMetadata()->getArrayCopy() as $key => $value) {
+                    $metadata[str_replace('_', '', (string) $key)] = $value;
+                }
 
-        dump($payload);
+                return array_merge([
+                    'id' => $document->getId(),
+                    $this->vectorFieldName => $document->getVector()->getData(),
+                ], $metadata);
+            }, $documents),
+        ];
 
         $this->request('index', $payload);
     }
