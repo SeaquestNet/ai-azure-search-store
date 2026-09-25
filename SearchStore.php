@@ -52,7 +52,6 @@ final class SearchStore implements StoreInterface
             'value' => array_map(fn (VectorDocument $document): array => array_merge(
                 [
                     'id' => $document->getId(),
-                    'content' => $document->getContent(),
                     $this->vectorFieldName => $document->getVector()->getData(),
                 ],
                 array_combine(str_replace('_', '', array_keys($meta = $document->getMetadata()->getArrayCopy())), $meta)
